@@ -3,15 +3,28 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {createElectronHandler, registerLogHandler} from './logger';
 
-// forward logs to electron's main thread
-registerLogHandler(createElectronHandler('log-event'));
+// check whether targeting web or electron
+const isElectron = require("is-electron");
+const TARGET = isElectron() ? 'electron' : 'web';
+const WEB = TARGET === 'web'
+const ELECTRON = !WEB
 
-// log versions
-console.log('Electron', process.versions.electron);
-console.log('Chrome', process.versions.chrome);
-console.log('Node', process.versions.node);
+if (ELECTRON) {
+  // forward logs to electron's main thread
+  const {createElectronHandler, registerLogHandler} = require('./logger');
+  registerLogHandler(createElectronHandler('log-event'));
+
+  // log versions
+  console.log('Target:', TARGET);
+  console.log('Electron', process.versions.electron);
+  console.log('Chrome', process.versions.chrome);
+  console.log('Node', process.versions.node);
+}
+else {
+  // log versions
+  console.log('Target:', TARGET);
+}
 
 ReactDOM.render(<App/>, document.getElementById('root'));
 

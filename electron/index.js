@@ -27,7 +27,7 @@ function createMainWindow() {
     webPreferences: {
       nodeIntegration: true
     },
-    title: app.getName()
+    title: app.name
   };
   return createWindow(MAIN_WINDOW_ID, windowOptions);
 }

@@ -1,4 +1,4 @@
-import {remote} from 'electron';
+const {remote} = require('electron');
 
 /**
  * The console.log levels that will be intercepted.
@@ -38,7 +38,7 @@ let windowHandler = null;
  * Attaches a log handler to global.console and window.onerror
  * @param {function} handler - receives log events. Should accept (level, ...args)
  */
-export const registerLogHandler = (handler) => {
+const registerLogHandler = (handler) => {
   if (typeof handler !== 'function') {
     console.error(
       `Invalid log handler. Expected a function but instead received ${typeof handler}`);
@@ -54,7 +54,7 @@ export const registerLogHandler = (handler) => {
  * @param eventName - the name of the electron event that will be emitted.
  * @returns {Function}
  */
-export const createElectronHandler = eventName => (level, ...args) => {
+const createElectronHandler = eventName => (level, ...args) => {
   remote.app.emit(eventName, {
     level,
     args
@@ -142,3 +142,5 @@ function stringifyArgs(args) {
   }
   return stringArgs;
 }
+
+export {createElectronHandler, registerLogHandler};

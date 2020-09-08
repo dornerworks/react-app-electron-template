@@ -6,21 +6,28 @@
   "homepage": "./",
   "dependencies": {
     "@craco/craco": "^5.6.3",
+    "is-electron": "^2.2.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "^3.3.0"
   },
   "scripts": {
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "analyze": "source-map-explorer 'web-build/static/js/*.js'",
     "storybook": "start-storybook -p 9001 -c .storybook",
-    "start": "concurrently \"yarn react-start\" \"wait-on http://localhost:3000/ && cross-env NODE_ENV=development yarn electron-start\"",
-    "build": "yarn react-build && yarn build-main && copyfiles package.json build/ && yarn electron-build",
-    "electron-start": "electron .",
-    "electron-build": "electron-packager ./build --out=dist",
+    "start": "cp .env.web .env.local && concurrently \"yarn react-start\" \"wait-on http://localhost:3000/\"",
+    "build": "yarn react-build && yarn build-main && copyfiles package.json build/",
     "react-start": "craco start",
     "react-build": "craco build",
-    "build-main": "webpack --config electron/webpack.config.js",
-    "test": "craco test"
+    "build-main": "webpack --config web/webpack.config.js",
+    "test": "craco test",
+    "start-electron": "cp .env.electron .env.local && concurrently \"yarn react-start-electron\" \"wait-on http://localhost:3000/ && cross-env NODE_ENV=development yarn electron-start\"",
+    "build-electron": "yarn react-build-electron && yarn build-main-electron && copyfiles package.json build/ && yarn electron-build",
+    "electron-start": "electron .",
+    "electron-build": "electron-packager ./build --out=dist",
+    "react-start-electron": "craco start --config craco.config.electron.js",
+    "react-build-electron": "craco build --config craco.config.electron.js",
+    "build-main-electron": "webpack --config electron/webpack.config.js",
+    "test-electron": "craco test --config craco.config.electron.js"
   },
   "eslintConfig": {
     "extends": "react-app"
