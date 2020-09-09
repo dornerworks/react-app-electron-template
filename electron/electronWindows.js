@@ -93,25 +93,8 @@ function defineWindow(windowId, options = {}) {
 function createWindow(windowId, options = {}) {
   const window = defineWindow(windowId, options);
 
-  if (IS_DEVELOPMENT) {
-    window.loadURL('http://localhost:3000');
-
-    // install some developer tools
-    try {
-      const {
-        default: installExtension,
-        REACT_DEVELOPER_TOOLS
-      } = require('electron-devtools-installer');
-
-      installExtension(REACT_DEVELOPER_TOOLS).catch(e => {
-        console.error('Could not install React developer tools', e);
-      });
-    } catch (e) {
-      console.error('Could not install developer extensions', e);
-    }
-  } else {
-    window.loadURL(`file://${path.join(__dirname, '/index.html')}`);
-  }
+  const url = IS_DEVELOPMENT ? 'http://localhost:3000' : `file://${path.join(__dirname, '/index.html')}`
+  window.loadURL(url);
 
   window.webContents.on('devtools-opened', () => {
     window.focus();
@@ -123,10 +106,23 @@ function createWindow(windowId, options = {}) {
   return window;
 }
 
+const installExtensions = async () => {
+  const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
+  for (const extension of [REACT_DEVELOPER_TOOLS]) {
+    try {
+      const name = await installExtension(extension);
+      console.log(`Added Extension: ${name}`);
+    } catch (e) {
+      console.log('An error occurred: ', e);
+    }
+  }
+}
+
 module.exports = {
   getWindow,
   getWindowId,
   defineWindow,
   createWindow,
-  closeAllWindows
+  closeAllWindows,
+  installExtensions
 };

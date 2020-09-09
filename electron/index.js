@@ -5,7 +5,8 @@ const {
   createWindow,
   defineWindow,
   getWindow,
-  closeAllWindows
+  closeAllWindows,
+  installExtensions
 } = require('./electronWindows');
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
@@ -140,11 +141,16 @@ app.on('activate', () => {
 app.on('ready', () => {
   const splashWindow = createSplashWindow();
   const mainWindow = createMainWindow();
-  mainWindow.once('ready-to-show', () => {
+  mainWindow.once('ready-to-show', async () => {
     setTimeout(() => {
       splashWindow.close();
       mainWindow.show();
     }, 300);
+
+    if (IS_DEVELOPMENT) {
+      await installExtensions();
+      mainWindow.webContents.toggleDevTools();
+    }
   });
 });
 
