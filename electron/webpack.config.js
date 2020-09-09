@@ -5,7 +5,7 @@ module.exports = {
     entry: '.',
     output: {
         path: path.join(__dirname, '../build'),
-        filename: 'main.js',
+        filename: 'electron.js',
     },
     devtool: 'inline-source-map',
     target: 'electron-main',
