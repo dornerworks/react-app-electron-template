@@ -12,7 +12,7 @@
     "react-scripts": "^3.3.0"
   },
   "scripts": {
-    "analyze": "source-map-explorer 'web-build/static/js/*.js'",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "start": "cp .env.web .env.local && concurrently \"yarn react-start\" \"wait-on http://localhost:3000/\"",
     "build": "yarn react-build && yarn build-main && copyfiles package.json build/",
