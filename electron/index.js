@@ -26,7 +26,9 @@ function createMainWindow() {
     center: true,
     autoHideMenuBar: true,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      enableRemoteModule: true,
+      worldSafeExecuteJavaScript: true
     },
     title: app.name
   };
@@ -45,7 +47,8 @@ function createSplashWindow() {
     resizable: false,
     autoHideMenuBar: true,
     webPreferences: {
-      nodeIntegration: false
+      nodeIntegration: false,
+      worldSafeExecuteJavaScript: true
     },
     frame: false,
     show: true,
