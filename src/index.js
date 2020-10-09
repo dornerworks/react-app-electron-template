@@ -5,14 +5,14 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 // check whether targeting web or electron
-const isElectron = require("is-electron");
+const isElectron = require('is-electron');
 const TARGET = isElectron() ? 'electron' : 'web';
-const WEB = TARGET === 'web'
-const ELECTRON = !WEB
+const WEB = TARGET === 'web';
+const ELECTRON = !WEB;
 
 if (ELECTRON) {
   // forward logs to electron's main thread
-  const {createElectronHandler, registerLogHandler} = require('./logger');
+  const { createElectronHandler, registerLogHandler } = require('./logger');
   registerLogHandler(createElectronHandler('log-event'));
 
   // log versions
@@ -20,13 +20,12 @@ if (ELECTRON) {
   console.log('Electron', process.versions.electron);
   console.log('Chrome', process.versions.chrome);
   console.log('Node', process.versions.node);
-}
-else {
+} else {
   // log versions
   console.log('Target:', TARGET);
 }
 
-ReactDOM.render(<App/>, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -1,4 +1,4 @@
-const {BrowserWindow} = require('electron');
+const { BrowserWindow } = require('electron');
 const path = require('path');
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
@@ -61,7 +61,8 @@ function defineWindow(windowId, options = {}) {
       ...options.webPreferences,
       additionalArguments: [
         ...options.webPreferences.additionalArguments,
-        `--window-id=${windowId}`]
+        `--window-id=${windowId}`
+      ]
     }
   };
   const window = new BrowserWindow(windowOptions);
@@ -75,8 +76,7 @@ function defineWindow(windowId, options = {}) {
 
   // attach crash listener
   window.webContents.on('crashed', (event, killed) => {
-    console.error(
-      `Window ${windowId} ${killed ? 'was killed' : 'has crashed'}.`, event);
+    console.error(`Window ${windowId} ${killed ? 'was killed' : 'has crashed'}.`, event);
     windows[windowId] = null;
   });
 
@@ -93,7 +93,9 @@ function defineWindow(windowId, options = {}) {
 function createWindow(windowId, options = {}) {
   const window = defineWindow(windowId, options);
 
-  const url = IS_DEVELOPMENT ? 'http://localhost:3000' : `file://${path.join(__dirname, '/index.html')}`
+  const url = IS_DEVELOPMENT
+    ? 'http://localhost:3000'
+    : `file://${path.join(__dirname, '/index.html')}`;
   window.loadURL(url);
 
   window.webContents.on('devtools-opened', () => {
@@ -107,7 +109,10 @@ function createWindow(windowId, options = {}) {
 }
 
 const installExtensions = async () => {
-  const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
+  const {
+    default: installExtension,
+    REACT_DEVELOPER_TOOLS
+  } = require('electron-devtools-installer');
   for (const extension of [REACT_DEVELOPER_TOOLS]) {
     try {
       const name = await installExtension(extension);
@@ -116,7 +121,7 @@ const installExtensions = async () => {
       console.log('An error occurred: ', e);
     }
   }
-}
+};
 
 module.exports = {
   getWindow,

@@ -1,0 +1,18 @@
+build-web:
+  script:
+    - yarn build-docker
+    - tar -czf website.tgz build/
+  artifacts:
+    paths:
+      - website.tgz
+
+build-electron:
+  script:
+    - yarn build-electron-docker
+  artifacts:
+    paths:
+      - ./dist/*.exe
+
+test:
+  script:
+    - yarn test-docker

@@ -1,4 +1,4 @@
-const {remote} = require('electron');
+const { remote } = require('electron');
 
 /**
  * The console.log levels that will be intercepted.
@@ -41,7 +41,8 @@ let windowHandler = null;
 const registerLogHandler = (handler) => {
   if (typeof handler !== 'function') {
     console.error(
-      `Invalid log handler. Expected a function but instead received ${typeof handler}`);
+      `Invalid log handler. Expected a function but instead received ${typeof handler}`
+    );
     return;
   }
   bindConsole();
@@ -54,7 +55,7 @@ const registerLogHandler = (handler) => {
  * @param eventName - the name of the electron event that will be emitted.
  * @returns {Function}
  */
-const createElectronHandler = eventName => (level, ...args) => {
+const createElectronHandler = (eventName) => (level, ...args) => {
   remote.app.emit(eventName, {
     level,
     args
@@ -68,9 +69,7 @@ const createElectronHandler = eventName => (level, ...args) => {
 function bindWindow() {
   if (windowHandler === null) {
     windowHandler = (msg, url, lineNo, columnNo, error) => {
-      hijackLog('error')([
-        msg, url, lineNo, columnNo, error
-      ]);
+      hijackLog('error')([msg, url, lineNo, columnNo, error]);
       return false;
     };
     window.onerror = windowHandler;
@@ -82,7 +81,7 @@ function bindWindow() {
  * @param {string} level - the log level
  * @returns {Function}
  */
-const hijackLog = level => (...args) => {
+const hijackLog = (level) => (...args) => {
   globalConsole[level](...args);
   for (const handler of handlers) {
     handler(...processLog(level, args));
@@ -109,18 +108,14 @@ function bindConsole() {
  * @param {array} [stringableLevels] - an array of log levels whose arguments will be stringified.
  * @return {array} - {level, timestamp, args}
  */
-function processLog(
-  level, args, stringableLevels = ['info', 'warn', 'error']) {
+function processLog(level, args, stringableLevels = ['info', 'warn', 'error']) {
   // stringify args if applicable
   let formattedArgs = args;
   if (stringableLevels.indexOf(level) > -1) {
     formattedArgs = stringifyArgs(args);
   }
 
-  return [
-    level.toUpperCase(),
-    ...formattedArgs
-  ];
+  return [level.toUpperCase(), ...formattedArgs];
 }
 
 /**
@@ -143,4 +138,4 @@ function stringifyArgs(args) {
   return stringArgs;
 }
 
-export {createElectronHandler, registerLogHandler};
+export { createElectronHandler, registerLogHandler };

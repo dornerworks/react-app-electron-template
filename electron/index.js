@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const {app, Menu} = require('electron');
+const { app, Menu } = require('electron');
 const {
   createWindow,
   defineWindow,
@@ -11,6 +11,7 @@ const {
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 const MAIN_WINDOW_ID = 'main';
+const ICON = path.join(__dirname, IS_DEVELOPMENT ? '../public/icon.png' : 'icon.png');
 
 /**
  * Creates a window for the main application.
@@ -18,10 +19,11 @@ const MAIN_WINDOW_ID = 'main';
  */
 function createMainWindow() {
   const windowOptions = {
-    width: 980,
-    minWidth: 425,
-    height: 580,
-    minHeight: 425,
+    width: IS_DEVELOPMENT ? 2000 : 1600,
+    height: 1000,
+    minWidth: 1200,
+    minHeight: 800,
+    icon: ICON,
     show: false,
     center: true,
     autoHideMenuBar: true,
@@ -44,6 +46,7 @@ function createSplashWindow() {
   const windowOptions = {
     width: 400,
     height: 200,
+    icon: ICON,
     resizable: false,
     autoHideMenuBar: true,
     webPreferences: {
@@ -88,7 +91,7 @@ const menuTemplate = [
       {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
-        click: function(item, focusedWindow) {
+        click: function (item, focusedWindow) {
           if (focusedWindow) {
             focusedWindow.reload();
           }
@@ -96,9 +99,8 @@ const menuTemplate = [
       },
       {
         label: 'Toggle Developer Tools',
-        accelerator:
-          process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-        click: function(item, focusedWindow) {
+        accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+        click: function (item, focusedWindow) {
           if (focusedWindow) {
             focusedWindow.webContents.toggleDevTools();
           }
@@ -158,7 +160,7 @@ app.on('ready', () => {
 });
 
 // receive log events from the render thread
-app.on('log-event', args => {
+app.on('log-event', (args) => {
   try {
     const logPath = path.normalize(`console.log`);
     const payload = `\n${new Date().toTimeString()} ${args.level}: ${args.args}`;
@@ -167,7 +169,7 @@ app.on('log-event', args => {
       // overwrite entire file if missing or lager than 1mb
       writer = fs.writeFileSync;
     }
-    writer(logPath, payload, {encoding: 'utf-8'});
+    writer(logPath, payload, { encoding: 'utf-8' });
   } catch (e) {
     console.error('Failed to handle log', e, args);
   }
